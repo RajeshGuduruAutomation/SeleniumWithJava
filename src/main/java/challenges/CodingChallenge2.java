@@ -51,10 +51,7 @@ public class CodingChallenge2 {
         listOfItemsMap.put("Limited time offers",listOfItems7);
 
         for (String item : listOfItemsMap.keySet()) {
-/*            System.out.println("==============================List of items of before sorting for item ::"+item);
-            listOfItemsMap.get(item).forEach(System.out::println);*/
-            Collections.sort(listOfItemsMap.get(item)); // Sort list of items
-            System.out.println("==============================List of items of after sorting for item ::"+item);
+            System.out.println("==============================List of items for ::"+item);
             listOfItemsMap.get(item).forEach(System.out::println);
         }
 
@@ -112,6 +109,7 @@ public class CodingChallenge2 {
             }
         }
         System.out.println("Total items count is "+listOfItems.size()+" for : '"+itemName+"'");
+        Collections.sort(listOfItems); // Sort list of items
         return listOfItems;
     }
 
