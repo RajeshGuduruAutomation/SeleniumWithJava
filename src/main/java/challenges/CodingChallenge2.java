@@ -28,6 +28,7 @@ public class CodingChallenge2 {
         chromeOptions.addArguments("--no-sandbox");
 
         driver = new ChromeDriver(chromeOptions);
+
         //driver = new FirefoxDriver();
         js = (JavascriptExecutor) driver;
         driver.get("https://www.noon.com/uae-en/");
@@ -59,25 +60,29 @@ public class CodingChallenge2 {
     }
 
     public static List<String> getCarouselItems(String itemName) throws InterruptedException {
+        System.out.println("itemName : "+itemName);
         waitForPageToLoad();
+        js.executeScript("window.scrollTo(0,0)");
+        sleep(2000);
         //List<WebElement> webElementList = driver.findElements(By.xpath("//*[text()='"+itemName+"']/parent::div/parent::div/following-sibling::div//div[@data-qa='product-name']/div"));
         List<WebElement> webElementList = waitForElementPresent("//*[text()='"+itemName+"']/parent::div/parent::div/following-sibling::div//div[@data-qa='product-name']/div");
-
+        System.out.println("webElementList : "+webElementList.size());
         if(webElementList.size() == 0) {
             while(true) {
                 String prevHeight = js.executeScript(" return window.scrollY").toString();
                 js.executeScript("window.scrollBy(0,1000)");
                 String currentHeight = js.executeScript(" return window.scrollY").toString();
                 waitForPageToLoad();
-                if(prevHeight == currentHeight) {
-                    System.out.println("Reached end of page and webElementList size is : "+webElementList.size() + " for item :"+itemName);
-                    break;
-                }
+                sleep(2000);
                 webElementList =
                         waitForElementPresent("//*[text()='"+itemName+"']/parent::div/parent::div/following-sibling::div//div[@data-qa='product-name']/div");
 
                 if(webElementList.size() > 0) {
                     System.out.println("Initial webElements size is "+0+" and current size is : "+webElementList.size() + " for item : '"+itemName+"' after scrolling down by "+currentHeight+ "pixels");
+                    break;
+                }
+                if(prevHeight == currentHeight) {
+                    System.out.println("Reached end of page and webElementList size is : "+webElementList.size() + " for item :"+itemName);
                     break;
                 }
             }
@@ -87,6 +92,7 @@ public class CodingChallenge2 {
         List<String> listOfItems = new ArrayList<>();
         for (WebElement element : webElementList) {
             WebElement nextButtonEle = driver.findElement(By.xpath("//*[text()='"+itemName+"']/parent::div/parent::div/following-sibling::div//div[@data-qa='product-name']/ancestor::div[@class='swiper-container swiper-container-initialized swiper-container-horizontal']/following-sibling::div[contains(@class,'swiper-button-next')]"));
+
             boolean elementDisplay = element.isDisplayed();
             boolean nextButtonElementDisplay = nextButtonEle.isDisplayed();
             while(true)  {
@@ -96,14 +102,22 @@ public class CodingChallenge2 {
                     listOfItems.add(eleText);
                     count = count + 1;
                 } else if(eleText.equals("") && nextButtonElementDisplay){
-                    js.executeScript("arguments[0].scrollIntoView(true);", nextButtonEle);
-                    /*Actions actions = new Actions(driver);
-                    actions.click(nextButtonEle).build().perform();*/
+                    int x = nextButtonEle.getRect().getX();
+                    int y = nextButtonEle.getRect().getY();
+                    System.out.println("window.scrollTo("+x+","+y+")");
+                    js.executeScript("window.scrollTo("+x+","+y+")");
+                    sleep(1000);
+                   // js.executeScript("arguments[0].scrollIntoView();", nextButtonEle);
+
+                   /* Actions actions = new Actions(driver);
+                    actions.moveToElement(nextButtonEle).click().perform();*/
+                   // actions.click(nextButtonEle).build().perform();
                     js.executeScript("arguments[0].click();", nextButtonEle);
                     //nextButtonEle.click();
                     sleep(500);
                     listOfItems.add(element.getText());
                     count = count + 1;
+                   //js.executeScript("window.scrollTo(0,0)");
                 }
                 break;
             }
