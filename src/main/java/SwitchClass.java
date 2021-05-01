@@ -1,4 +1,4 @@
-import javaLearningPackage.EnumClass;
+import javaLearningPackage.EnumClass.Mobiles;
 
 import javax.swing.*;
 
@@ -43,8 +43,8 @@ public class SwitchClass {
                     System.out.println("Default");
         }
 
-        EnumClass.Mobiles[] mobiles = EnumClass.Mobiles.values();
-        for (EnumClass.Mobiles mobile : mobiles) {
+        Mobiles[] mobiles = Mobiles.values();
+        for (Mobiles mobile : mobiles) {
             if(mobile.getPrice() == 0) {
                 mobile.setPrice(2000);
             }

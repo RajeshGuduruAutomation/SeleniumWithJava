@@ -1,10 +1,10 @@
 import java.lang.reflect.InvocationTargetException;
 
-public class CallByReference {
-    public int x;
+class CallByReference {
+    public int x = 0;
     private static CallByReference getInstance;
     private CallByReference() {
-
+    this(10);
     }
     CallByReference(int x) {
         this.x = x;
@@ -12,7 +12,7 @@ public class CallByReference {
     public void change(int x) {
         CallByReference cbr = new CallByReference(40);
         System.out.println(cbr.x);
-        cbr.x = x + 10;
+        this.x = x + 10;
         System.out.println(x);
         System.out.println(cbr.x);
 //        x = 70;
